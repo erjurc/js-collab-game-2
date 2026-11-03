@@ -6,11 +6,14 @@ const pokoje = [
 ];
 
 function stanPoczatkowy(){
-    let pokoj = 1;
+    let pokoje = 1;
     let energia = 10;
     let karta = true;
     let bezpiecznik = false;
     let zasilanie = false;
     let koniec = false;
     let wygrana = false;
+    return{
+        pokoje, energia, karta, bezpiecznik, zasilanie, koniec, wygrana
+    };
 }
