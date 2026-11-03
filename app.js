@@ -50,7 +50,7 @@ function nazwaPokoju(numer) {
 }
 
 function pomoc() {
-  console.log("67 POMOC DOSTĘPNE KOMENDY 67");
+  console.log(" POMOC DOSTĘPNE KOMENDY ");
   console.log("start() - Rozpoczyna nową grę od początku.");
   console.log("pomoc() - Wyświetla tę listę komend.");
   console.log("status() - Pokazuje stan energii, przedmioty i postępy.");
@@ -68,17 +68,13 @@ function pomoc() {
 }
 
 function status() {
-  console.log("67 STATUS GRY 67");
+  console.log(" STATUS GRY ");
   console.log("Aktualny pokój: " + pokoj + " (" + nazwaPokoju(pokoj) + ")");
   console.log("Energia: " + energia);
   console.log("Karta: " + (karta ? "tak" : "nie"));
   console.log("Bezpiecznik: " + (bezpiecznik ? "tak" : "nie"));
   console.log("Zasilanie: " + (zasilanie ? "włączone" : "wyłączone"));
   console.log("--------------------------------------------------")
-  console.log("We are Charlie Kirk, we carry the flame.");
-  console.log("We'll fight for the Gospel, we'll honor his name.");
-  console.log("We are Charlie Kirk, his courage our own.");
-  console.log("Together unbroken, we'll make Heaven known");
 }
 function mapa() {
   for (let numer = 1; numer <= 4; numer = numer + 1) {
@@ -93,20 +89,20 @@ function mapa() {
 function rozejrzyj() {
   switch (pokoj) {
     case 1: //Recepcja
-      console.log("Znajdujesz się w recepcji (Macha do ciebie ładna pani recepcjonistka).");
+      console.log("Znajdujesz się w recepcji");
       if (!karta) {
-        console.log("Na biurku leży karta dostępu, i karteczka z numerem do recepcjoniskti.");
+        console.log("Na biurku leży karta dostępu");
       } else {
         console.log("Biurko jest puste.");
       }
       break;
 
     case 2: //Magazyn
-      console.log("Jesteś w magazynie pełnym starych regałów ze starymi pornosami.");
+      console.log("Jesteś w magazynie pełnym starych regałów");
       if (!bezpiecznik && !zasilanie) {
         console.log("Na jednej z półek leży zapasowy bezpiecznik.");
       } else {
-        console.log("Półka z częściami jest pusta.(Prawie(są tylko pudełka z pornosami))");
+        console.log("Półka z częściami jest pusta.");
       }
       break;
 
@@ -120,12 +116,12 @@ function rozejrzyj() {
       break;
 
     case 4: // Wyjscie
-      console.log("Stoisz przed drzwiami wyjściowymi.(Smutna recepjonistka macha do ciebie żebyś wrócił)");
+      console.log("Stoisz przed drzwiami wyjściowymi.");
       console.log("Wymagania do ucieczki: musisz posiadać kartę oraz włączone zasilanie!");
       break;
 
     default:
-      console.log("Nie wiesz, gdzie jesteś, zgubiłeś się ciołku");
+      console.log("Nie wiesz, gdzie jesteś, zgubiłeś się ");
   }
 }
 
