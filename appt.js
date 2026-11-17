@@ -165,8 +165,10 @@ window.gra = {
     status,
     reset,
     eksportuj,
-    importuj
+    importuj,
+    rozejrzyj
 };
 
 console.log("Gra uruchomiona");
 status();
+rozejrzyj();
