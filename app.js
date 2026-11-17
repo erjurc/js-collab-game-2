@@ -1,20 +1,20 @@
-// WSPOLNY KONTRAKT: nazwy zmiennych i funkcji uzgadnia caly zespol.
 const MAKS_ENERGIA = 10;
-let pokoj = 1;
+let pokoj = 2; // Start w Recepcji (pokój 2)
 let energia = MAKS_ENERGIA;
-let karta = true;
+let karta = false;
 let bezpiecznik = false;
 let zasilanie = false;
+let klucz = false;
 let koniec = false;
 let wygrana = false;
 
-// SEKCJA 0 — GOTOWY SILNIK NAUCZYCIELA
 function start() {
-  pokoj = 1;
+  pokoj = 2;
   energia = MAKS_ENERGIA;
   karta = false;
   bezpiecznik = false;
   zasilanie = false;
+  klucz = false;
   koniec = false;
   wygrana = false;
   console.log("UCIECZKA Z SERWEROWNI. Zasilanie awaryjne wystarczy na 10 tur.");
@@ -37,13 +37,15 @@ function zakonczTure() {
 function nazwaPokoju(numer) {
   switch (numer) {
     case 1:
-      return "Recepcja";
+      return "Składzik";
     case 2:
-      return "Magazyn";
+      return "Recepcja";
     case 3:
-      return "Serwerownia";
+      return "Magazyn";
     case 4:
-      return "Wyjscie"
+      return "Serwerownia";
+    case 5:
+      return "Wyjście";
     default:
       return "Nieznane pomieszczenie";
   }
@@ -57,6 +59,7 @@ function pomoc() {
   console.log("mapa() - Pokazuje listę pomieszczeń i Twoją lokalizację.");
   console.log("rozejrzyj() - Opisuje pokój, w którym się znajdujesz.");
   console.log("idz('prawo') / idz('lewo') - Przemieszczanie się między pokojami.");
+  console.log("akcja('klucz') - Podnoszenie klucza (w Składziku).");
   console.log("akcja('karta') - Podnoszenie karty (w Recepcji).");
   console.log("akcja('bezpiecznik') - Podnoszenie bezpiecznika (w Magazynie).");
   console.log("akcja('napraw') - Montowanie bezpiecznika i włączenie zasilania (w Serwerowni).");
@@ -71,24 +74,36 @@ function status() {
   console.log(" STATUS GRY ");
   console.log("Aktualny pokój: " + pokoj + " (" + nazwaPokoju(pokoj) + ")");
   console.log("Energia: " + energia);
+  console.log("Klucz: " + (klucz ? "tak" : "nie"));
   console.log("Karta: " + (karta ? "tak" : "nie"));
   console.log("Bezpiecznik: " + (bezpiecznik ? "tak" : "nie"));
   console.log("Zasilanie: " + (zasilanie ? "włączone" : "wyłączone"));
-  console.log("--------------------------------------------------")
+  console.log("--------------------------------------------------");
 }
+
 function mapa() {
-  for (let numer = 1; numer <= 4; numer = numer + 1) {
-  let opis = numer + ". " + nazwaPokoju(numer);
+  for (let numer = 1; numer <= 5; numer = numer + 1) {
+    let opis = numer + ". " + nazwaPokoju(numer);
     
     if (numer === pokoj) {
       opis = opis + " <-- jestes tutaj";
     }
     console.log(opis);
+  }
 }
-}
+
 function rozejrzyj() {
   switch (pokoj) {
-    case 1: //Recepcja
+    case 1: // Składzik
+      console.log("Znajdujesz się w małym składziku.");
+      if (!klucz) {
+        console.log("Na półce leży klucz do magazynu.");
+      } else {
+        console.log("Półka jest pusta.");
+      }
+      break;
+
+    case 2: // Recepcja
       console.log("Znajdujesz się w recepcji");
       if (!karta) {
         console.log("Na biurku leży karta dostępu");
@@ -97,7 +112,7 @@ function rozejrzyj() {
       }
       break;
 
-    case 2: //Magazyn
+    case 3: // Magazyn
       console.log("Jesteś w magazynie pełnym starych regałów");
       if (!bezpiecznik && !zasilanie) {
         console.log("Na jednej z półek leży zapasowy bezpiecznik.");
@@ -106,7 +121,7 @@ function rozejrzyj() {
       }
       break;
 
-    case 3: // Serwerownia
+    case 4: // Serwerownia
       console.log("Wchodzisz do chłodnej serwerowni.");
       if (zasilanie) {
         console.log("Główne serwery buczą i chuczą, a zasilanie działa w najlepsze.(Jest zasilanie)");
@@ -115,7 +130,7 @@ function rozejrzyj() {
       }
       break;
 
-    case 4: // Wyjscie
+    case 5: // Wyjście
       console.log("Stoisz przed drzwiami wyjściowymi.");
       console.log("Wymagania do ucieczki: musisz posiadać kartę oraz włączone zasilanie!");
       break;
@@ -127,36 +142,35 @@ function rozejrzyj() {
 
 // SEKCJA B — RUCH
 function idz(kierunek) {
-	// TODO B1: zablokuj ruch po koncu gry. git
 	if(koniec == true){
-		console.log("koniec?");
+		console.log("Koniec gry.");
 		return;
 	}
-  // TODO B2: switch kierunku; oblicz kandydat na nowy pokoj.
+	
 	let nastepnypokoj = pokoj;
 	switch (kierunek){
 		case "prawo":
-			nastepnypokoj=nastepnypokoj+1;
+			nastepnypokoj = nastepnypokoj + 1;
 			break;
 		case "lewo":
-			nastepnypokoj=nastepnypokoj-1;
+			nastepnypokoj = nastepnypokoj - 1;
 			break;
 		default:
 			console.log("Wskazówka: wybierz kierunek 'prawo' lub 'lewo'.");
 			return;
 	}
-  // TODO B3: odrzuc pokoj poza 1..4 i nieznany kierunek bez kosztu.
-	if (nastepnypokoj < 1 || nastepnypokoj > 4) {
+
+  // Blokada wejścia do magazynu (pokój 3) bez klucza
+  if (nastepnypokoj === 3 && !klucz) {
+    console.log("Magazyn jest zamknięty! Potrzebujesz klucza ze składziku.");
+    return;
+  }
+
+	if (nastepnypokoj < 1 || nastepnypokoj > 5) {
     console.log("Nie ma przejścia");
     return;
 	}
-	if(nastepnypokoj < 1){
-		nastepnypokoj=1;
-	}
-	if(nastepnypokoj > 4){
-		nastepnypokoj=4;
-	}
-  // TODO B4: zapisz poprawny pokoj, rozejrzyj(), zakonczTure().
+
 	pokoj = nastepnypokoj;
 	rozejrzyj();
 	zakonczTure();
@@ -164,16 +178,16 @@ function idz(kierunek) {
 
 // SEKCJA C — PRZEDMIOTY I WYGRANA
 function akcja(co){
-  if(koniec==true){
+  if(koniec == true){
       console.log("Koniec gry");
       return;
   }
   switch(co){
-      case "karta":
-          if(karta == false){
-              if(pokoj==1){
-                  karta=true;
-                  console.log("Zebrano kartę")
+      case "klucz":
+          if(klucz == false){
+              if(pokoj == 1){
+                  klucz = true;
+                  console.log("Zebrano klucz do magazynu.");
                   break;
               }
               else{
@@ -182,14 +196,31 @@ function akcja(co){
               }
           }
           else{
-                console.log("Masz już kartę");
-                return;
+              console.log("Masz już klucz");
+              return;
+          }
+      case "karta":
+          if(karta == false){
+              if(pokoj == 2){
+                  karta = true;
+                  console.log("Zebrano kartę");
+                  break;
+              }
+              else{
+                  console.log("Zły pokój");
+                  return;
+              }
+          }
+          else{
+              console.log("Masz już kartę");
+              return;
           }
       case "bezpiecznik":
-          if(bezpiecznik==false){
-              if(zasilanie==false){
-                  if(pokoj==2){
-                      bezpiecznik=true;
+          if(bezpiecznik == false){
+              if(zasilanie == false){
+                  if(pokoj == 3){
+                      bezpiecznik = true;
+                      console.log("Podniesiono bezpiecznik.");
                       break;
                   }
                   else{
@@ -207,11 +238,12 @@ function akcja(co){
               return;
           }
       case "napraw":
-          if(bezpiecznik==true){
-              if(zasilanie==false){
-                  if(pokoj==3){
-                      zasilanie=true;
-                      bezpiecznik=false;
+          if(bezpiecznik == true){
+              if(zasilanie == false){
+                  if(pokoj == 4){
+                      zasilanie = true;
+                      bezpiecznik = false;
+                      console.log("Naprawiono zasilanie.");
                       break;
                   }
                   else{
@@ -229,11 +261,12 @@ function akcja(co){
               return;
           }
       case "wyjdz":
-          if(pokoj==4){
-              if(karta==true){
-                  if(zasilanie==true){
-                      wygrana=true;
-                      koniec=true;
+          if(pokoj == 5){
+              if(karta == true){
+                  if(zasilanie == true){
+                      wygrana = true;
+                      koniec = true;
+                      console.log("Udało się uciec!");
                       break;
                   }
                   else{
@@ -253,10 +286,8 @@ function akcja(co){
       default:
           console.log("Błędna komenda");
           return;
-      }
-      zakonczTure();
   }
-  console.log("Akcje do uzupelnienia");
-
+  zakonczTure();
+}
 
 start();

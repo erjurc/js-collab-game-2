@@ -1,19 +1,21 @@
 const pokoje = [
-  { id: 1, nazwa: "Recepcja"},
-  { id: 2, nazwa: "Magazyn"},
-  { id: 3, nazwa: "Serwerownia"},
-  { id: 4, nazwa: "Wyjście"}
+  { id: 1, nazwa: "Składzik"},
+  { id: 2, nazwa: "Recepcja"},
+  { id: 3, nazwa: "Magazyn"},
+  { id: 4, nazwa: "Serwerownia"},
+  { id: 5, nazwa: "Wyjście"}
 ];
 
 function stanPoczatkowy(){
-    let pokoje = 1;
+    let pokoj = 2;
     let energia = 10;
-    let karta = true;
+    let karta = false;
     let bezpiecznik = false;
     let zasilanie = false;
+    let klucz = false;
     let koniec = false;
     let wygrana = false;
     return{
-        pokoje, energia, karta, bezpiecznik, zasilanie, koniec, wygrana
+        pokoj, energia, karta, bezpiecznik, zasilanie, klucz, koniec, wygrana
     };
 }
