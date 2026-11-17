@@ -185,7 +185,7 @@ function przejscie(stanPrzed, komenda) {
 
         nowy.kaucja = true;
 
-        komunikat = "Zabrałeś dwa worki z kaucją! Na telefon przychodzi wiadomość od MJ: [TU WPISZ WIADOMOŚĆ]";
+        komunikat = "Zabrałeś dwa worki z kaucją! Na telefon przychodzi wiadomość od MJ: Właśnie odkryłeś sposób na zostanie Kaucjuszem.";
     }
 
     // Naprawa zasilania
