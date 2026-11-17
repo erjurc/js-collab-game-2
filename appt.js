@@ -12,7 +12,14 @@ function wykonaj(komenda) {
 
 // Poruszanie się
 function idz(kierunek) {
+
+    let poprzedniPokoj = stan.pokoj;
+
     wykonaj(kierunek);
+
+    if (stan.pokoj !== poprzedniPokoj) {
+        rozejrzyj();
+    }
 }
 
 // Zbieranie karty
@@ -99,6 +106,52 @@ function importuj(tekst) {
     } catch (blad) {
         console.log("Błąd wczytywania zapisu");
         return false;
+    }
+}
+function rozejrzyj() {
+
+    console.log("Znajdujesz się w:", pokoje[stan.pokoj - 1].nazwa);
+
+    if (stan.pokoj === 1) {
+        console.log("Recepcja: Musisz znaleźć i zabrać kartę dostępu.");
+
+        if (stan.karta) {
+            console.log("Masz już kartę dostępu. Możesz iść dalej.");
+        }
+    }
+
+    if (stan.pokoj === 2) {
+        console.log("Magazyn: Znajdź i zabierz bezpiecznik.");
+
+        if (stan.bezpiecznik) {
+            console.log("Masz bezpiecznik. Idź do serwerowni.");
+        }
+
+        if (stan.zasilanie) {
+            console.log("Bezpiecznik został już wykorzystany.");
+        }
+    }
+
+    if (stan.pokoj === 3) {
+        console.log("Serwerownia: Musisz naprawić zasilanie.");
+
+        if (stan.bezpiecznik) {
+            console.log("Wpisz gra.napraw(), aby naprawić zasilanie.");
+        } else if (stan.zasilanie) {
+            console.log("Zasilanie jest już naprawione. Idź do wyjścia.");
+        } else {
+            console.log("Najpierw zdobądź bezpiecznik w magazynie.");
+        }
+    }
+
+    if (stan.pokoj === 4) {
+        console.log("Wyjście: Możesz opuścić budynek.");
+
+        if (stan.karta && stan.zasilanie) {
+            console.log("Wpisz gra.wyjdz(), aby wygrać!");
+        } else {
+            console.log("Potrzebujesz karty dostępu i naprawionego zasilania.");
+        }
     }
 }
 
