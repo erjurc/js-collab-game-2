@@ -1,4 +1,4 @@
-
+const muzykaMJ = new Audio("./MJ.mp3");
 let stan = stanPoczatkowy();
 
 // Wykonywanie komendy
@@ -44,7 +44,8 @@ function wezBezpiecznik() {
 // Zbieranie kaucji
 function wezKaucje() {
     wykonaj("kaucja");
-    window.open("https://www.youtube.com/watch?v=AGsjA1pXajk&list=RDAGsjA1pXajk&start_radio=1", "_blank");
+    muzykaMJ.currentTime = 0;
+    muzykaMJ.play();
 }
 
 // Naprawa zasilania
