@@ -1,15 +1,19 @@
+
 let stan = stanPoczatkowy();
 
 // Wykonywanie komendy
 function wykonaj(komenda) {
     let wynik = przejscie(stan, komenda);
+
     stan = wynik.stan;
+
     console.log(wynik.komunikat);
 }
 
 // Poruszanie się
 function idz(kierunek) {
     let poprzedniPokoj = stan.pokoj;
+
     wykonaj(kierunek);
 
     if (stan.pokoj !== poprzedniPokoj) {
@@ -27,7 +31,7 @@ function wezKarte() {
     wykonaj("karta");
 }
 
-// Odblokowanie magazynu w recepcji
+// Odblokowanie magazynu
 function odblokujMagazyn() {
     wykonaj("odblokuj");
 }
@@ -35,6 +39,11 @@ function odblokujMagazyn() {
 // Zbieranie bezpiecznika
 function wezBezpiecznik() {
     wykonaj("bezpiecznik");
+}
+
+// Zbieranie kaucji
+function wezKaucje() {
+    wykonaj("kaucja");
 }
 
 // Naprawa zasilania
@@ -56,6 +65,7 @@ function status() {
     console.log("Karta:", stan.karta ? "tak" : "nie");
     console.log("Magazyn odblokowany:", stan.magazynOdblokowany ? "tak" : "nie");
     console.log("Bezpiecznik:", stan.bezpiecznik ? "tak" : "nie");
+    console.log("Kaucja:", stan.kaucja ? "zabrana" : "niezabrana");
     console.log("Zasilanie:", stan.zasilanie ? "włączone" : "wyłączone");
     console.log("Koniec gry:", stan.koniec);
     console.log("Wygrana:", stan.wygrana);
@@ -111,10 +121,20 @@ function rozejrzyj() {
 
         if (!stan.magazynOdblokowany) {
             console.log("ZAMKNIĘTE!");
-        } else if (!stan.bezpiecznik && !stan.zasilanie) {
-            console.log("Na półce leży zapasowy bezpiecznik.");
         } else {
-            console.log("Półka z częściami jest pusta.");
+            console.log("Pod ścianą widzisz dwa worki z kaucją.");
+
+            if (!stan.kaucja) {
+                console.log("Możesz je zabrać komendą gra.wezKaucje().");
+            } else {
+                console.log("Worki z kaucją zostały już zabrane.");
+            }
+
+            if (!stan.bezpiecznik && !stan.zasilanie) {
+                console.log("Na półce leży zapasowy bezpiecznik.");
+            } else {
+                console.log("Półka z częściami jest pusta.");
+            }
         }
     }
 
@@ -123,6 +143,12 @@ function rozejrzyj() {
 
         if (!stan.zasilanie) {
             console.log("Zasilanie jest wyłączone.");
+
+            if (stan.bezpiecznik) {
+                console.log("Możesz naprawić zasilanie komendą gra.napraw().");
+            } else {
+                console.log("Najpierw znajdź bezpiecznik w magazynie.");
+            }
         } else {
             console.log("Zasilanie działa!");
         }
@@ -130,7 +156,12 @@ function rozejrzyj() {
 
     if (stan.pokoj === 5) {
         console.log("WYJŚCIE");
-        console.log("Potrzebujesz karty i włączonego zasilania.");
+
+        if (stan.karta && stan.zasilanie) {
+            console.log("Możesz opuścić budynek komendą gra.wyjdz().");
+        } else {
+            console.log("Potrzebujesz karty i włączonego zasilania.");
+        }
     }
 }
 
@@ -143,6 +174,7 @@ function pomoc() {
     console.log("gra.wezKarte() - zbierz kartę");
     console.log("gra.odblokujMagazyn() - użyj klucza w recepcji");
     console.log("gra.wezBezpiecznik() - zbierz bezpiecznik");
+    console.log("gra.wezKaucje() - zabierz dwa worki z kaucją");
     console.log("gra.napraw() - napraw zasilanie");
     console.log("gra.wyjdz() - spróbuj uciec");
     console.log("gra.status() - pokaż status");
@@ -156,7 +188,9 @@ function pomoc() {
 // Reset
 function reset() {
     stan = stanPoczatkowy();
+
     console.log("Gra została zresetowana.");
+
     status();
     rozejrzyj();
 }
@@ -164,7 +198,7 @@ function reset() {
 // Eksport
 function eksportuj() {
     let pakiet = {
-        wersja: 2,
+        wersja: 3,
         stan: stan
     };
 
@@ -184,7 +218,7 @@ function importuj(tekst) {
         if (
             pakiet === null ||
             typeof pakiet !== "object" ||
-            pakiet.wersja !== 2 ||
+            pakiet.wersja !== 3 ||
             !czyStan(pakiet.stan)
         ) {
             console.log("Niepoprawny zapis.");
@@ -196,6 +230,7 @@ function importuj(tekst) {
         console.log("Wczytano zapis.");
         status();
         rozejrzyj();
+
         return true;
 
     } catch (blad) {
@@ -211,6 +246,7 @@ window.gra = {
     wezKarte,
     odblokujMagazyn,
     wezBezpiecznik,
+    wezKaucje,
     napraw,
     wyjdz,
     status,

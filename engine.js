@@ -1,3 +1,4 @@
+
 // Lista pomieszczeń
 const pokoje = [
     { id: 1, nazwa: "Składzik" },
@@ -19,6 +20,7 @@ function stanPoczatkowy() {
         karta: false,
         magazynOdblokowany: false,
         bezpiecznik: false,
+        kaucja: false,
         zasilanie: false,
         koniec: false,
         wygrana: false
@@ -35,28 +37,19 @@ function czyStan(stan) {
         return false;
     }
 
-    if (!Number.isInteger(stan.pokoj) || stan.pokoj < 1 || stan.pokoj > 5) {
-        return false;
-    }
-
-    if (
-        !Number.isInteger(stan.energia) ||
-        stan.energia < 0 ||
-        stan.energia > MAKS_ENERGIA
-    ) {
-        return false;
-    }
+    if (!Number.isInteger(stan.pokoj) || stan.pokoj < 1 || stan.pokoj > 5) return false;
+    if (!Number.isInteger(stan.energia) || stan.energia < 0 || stan.energia > MAKS_ENERGIA) return false;
 
     if (typeof stan.klucz !== "boolean") return false;
     if (typeof stan.karta !== "boolean") return false;
     if (typeof stan.magazynOdblokowany !== "boolean") return false;
     if (typeof stan.bezpiecznik !== "boolean") return false;
+    if (typeof stan.kaucja !== "boolean") return false;
     if (typeof stan.zasilanie !== "boolean") return false;
     if (typeof stan.koniec !== "boolean") return false;
     if (typeof stan.wygrana !== "boolean") return false;
 
     if (stan.wygrana && !stan.koniec) return false;
-
     if (stan.magazynOdblokowany && stan.klucz) return false;
 
     return true;
@@ -106,7 +99,6 @@ function przejscie(stanPrzed, komenda) {
         }
 
         nowy.pokoj = cel;
-
         komunikat = "Przeszedłeś do: " + pokoje[cel - 1].nazwa;
     }
 
@@ -177,6 +169,25 @@ function przejscie(stanPrzed, komenda) {
         komunikat = "Zebrano bezpiecznik.";
     }
 
+    // Pobieranie kaucji
+    else if (komenda === "kaucja") {
+
+        if (
+            nowy.pokoj !== 3 ||
+            !nowy.magazynOdblokowany ||
+            nowy.kaucja
+        ) {
+            return {
+                stan: stanPrzed,
+                komunikat: "Nie możesz zabrać kaucji."
+            };
+        }
+
+        nowy.kaucja = true;
+
+        komunikat = "Zabrałeś dwa worki z kaucją! Na telefon przychodzi wiadomość od MJ: [TU WPISZ WIADOMOŚĆ]";
+    }
+
     // Naprawa zasilania
     else if (komenda === "napraw") {
 
@@ -211,6 +222,10 @@ function przejscie(stanPrzed, komenda) {
         nowy.koniec = true;
 
         komunikat = "WYGRAŁEŚ! Udało Ci się uciec!";
+
+        if (nowy.kaucja) {
+            komunikat += " Jesteś bogatszy o wartość kaucji, Kaucjuszu!";
+        }
     }
 
     else {
