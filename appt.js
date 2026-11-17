@@ -44,6 +44,7 @@ function wezBezpiecznik() {
 // Zbieranie kaucji
 function wezKaucje() {
     wykonaj("kaucja");
+    window.open("https://www.youtube.com/watch?v=AGsjA1pXajk&list=RDAGsjA1pXajk&start_radio=1", "_blank");
 }
 
 // Naprawa zasilania
